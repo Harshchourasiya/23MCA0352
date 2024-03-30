@@ -9,13 +9,14 @@ const getCostumURL = (company, product, n) => {
 }
 const bearer = 'Bearer ' + process.env.ACCESS_TOKEN;
 
-app.get('/categories/:categoryname/product', async(req, res) => {
+app.get('/categories/:categoryname/product/', async(req, res) => {
     res.contentType('json');
     const category = req.params.categoryname;
     const n = req.query.n;
     const sortBy = req.query.sortBy.split(","); 
     const des = req.query.orderBy == "DES";
     const page = req.query.page;
+
    if (registeredCats.indexOf(category) >= 0) {
         // code for getting the n top products
         const dataToSend = [];
@@ -29,9 +30,13 @@ app.get('/categories/:categoryname/product', async(req, res) => {
             });
             const jData = await data.json();
             for (let d of jData) {
-                dataToSend.push({...d, id: parseInt(Math.random()*10000000)});
+                dataToSend.push(d);
             }
         }
+
+        dataToSend.forEach((value, index)=> {
+            value.id = `ProductID${index}`;
+        });
 
 
         // sorting
