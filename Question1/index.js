@@ -74,9 +74,5 @@ app.get('/categories/:categoryname/product', async(req, res) => {
 });
 
 
-app.get('/categories/:categoryname/product/:id',async(req,res)=> {
-
-});
-
 app.listen(3000);
 
