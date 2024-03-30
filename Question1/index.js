@@ -12,14 +12,11 @@ const bearer = 'Bearer ' + process.env.ACCESS_TOKEN;
 app.get('/categories/:categoryname/product', async(req, res) => {
     res.contentType('json');
     const category = req.params.categoryname;
-    const id = req.params.productId;
     const n = req.query.n;
     const sortBy = req.query.sortBy.split(","); 
     const des = req.query.orderBy == "DES";
     const page = req.query.page;
-    if (id && registeredCats.indexOf(category) >= 0) {
-        // after sometime
-    } else if (!id) {
+   if (registeredCats.indexOf(category) >= 0) {
         // code for getting the n top products
         const dataToSend = [];
 
@@ -32,9 +29,10 @@ app.get('/categories/:categoryname/product', async(req, res) => {
             });
             const jData = await data.json();
             for (let d of jData) {
-                dataToSend.push(d);
+                dataToSend.push({...d, id: parseInt(Math.random()*10000000)});
             }
         }
+
 
         // sorting
         
@@ -48,13 +46,13 @@ app.get('/categories/:categoryname/product', async(req, res) => {
                     break;
             }
         }   
+
         
         // paging
 
         const pages = [];
         const size = parseInt(n*registeredCompanies.length/10);
         let idx = 0;
-        console.log(size);
         for (let i = 0; i < size && idx < dataToSend.length; i++) {
             const pageData = [];
             for (let i = 0; i < 10 && idx < dataToSend.length; i++) {
@@ -69,11 +67,16 @@ app.get('/categories/:categoryname/product', async(req, res) => {
             res.status(200).json(dataToSend);
         }
 
+
     } else {
         res.status(404).json({message:'Product is Not present!'});
     }
-    // res.send({message: 'Data'});
-})
+});
+
+
+app.get('/categories/:categoryname/product/:id',async(req,res)=> {
+
+});
 
 app.listen(3000);
 
